@@ -98,34 +98,50 @@
 				// New map
 				var map = new google.maps.Map(document.getElementById("map"), options);
 
-				// Listen for click on map
-				google.maps.event.addListener(map, "click", function(event) {
-					// Add marker
-					addMarker({ coords: event.latLng });
-				});
-
+				var pic =
+					"http://www.clker.com/cliparts/5/e/k/r/7/1/red-dot.svg.med.png";
 				// Array of markers
 				var markers = [];
-
-				// Loop through markers
-				for (var i = 0; i < markers.length; i++) {
-					// Add marker
-					addMarker(markers[i]);
-				}
 
 				// Add Marker Function
 				function addMarker(props) {
 					var marker = new google.maps.Marker({
 						position: props.coords,
-						map: map
-						//icon:props.iconImage
+						map: map,
+						icon: props.iconImage
 					});
+					markers.push(marker);
+				}
+			}
+			// Hour, Day format
+			const URL = "http://127.0.0.1:5000/location";
 
-					// Check for customicon
-					if (props.iconImage) {
-						// Set icon image
-						marker.setIcon(props.iconImage);
-					}
+			var hourSlider = document.getElementById("hour");
+			var daySlider = document.getElementById("day");
+
+			hourSlider.addEventListener("input", placeholder());
+			daySlider.addEventListener("input", placeholder());
+
+			function placeholder() {
+				markers = [];
+				data = {
+					hour: hourSlider.value,
+					day: daySlider.value
+				};
+				fetch(URL)
+					.then(data => {
+						return data.json();
+					})
+					.then(res => {
+						console.log(res);
+					});
+				let nodes = data.nodes;
+
+				var i;
+				for (i = 0; i < nodes.length; i++) {
+					var coords = { lat: nodes[i].lat, lng: nodes[i].lng };
+					var props = { coords: coords, iconImage: pic };
+					addMarker(props);
 				}
 			}
 		</script>
