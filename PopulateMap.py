@@ -1,8 +1,8 @@
 import FileParser as fp
 import numpy as np
 import math
+import pandas
 from Node import Node
-from NeuralNetwork import Neural_Network
 
 dayToIndex = {'Monday    ': 1,
               'Tuesday   ': 2,
@@ -18,10 +18,11 @@ class PopulateMap():
         self.set = fp.parseCSV(fp.crime_datasets[1])
         inp = ["occurrencedayofweek", "occurrencehour", "X", "Y"]
         inputX = self.set[inp]
-        self.set = inputX["occurrencedayofweek"] = inputX["occurrencedayofweek"].replace(dayToIndex)
+        self.nodes = []
+        inputX["occurrencedayofweek"] = inputX["occurrencedayofweek"].replace(dayToIndex)
+        self.set = inputX
         self.filteredSet = None
         self.applyFilter(4.0, 11.0)
-
 
     def applyFilter(self, day, time):
         first = self.set[self.set.occurrencedayofweek == day]
@@ -33,9 +34,23 @@ class PopulateMap():
 
     def distanceTo(self, n1, n2):
         return math.sqrt((n1.lat-n2.lat)**2 + (n1.long - n2.long)**2)
-
     def getNeighbors(self, threshold):
         for i in range(len(self.nodes)):
             for b in range(i + 1, len(self.nodes)):
                 if (self.distanceTo(self.nodes[i], self.nodes[b]) < threshold):
                     self.nodes[i].neighbors = self.nodes[i].neighbors + 1
+
+if __name__ == "__main__":
+    x = PopulateMap()
+    x.applyFilter(4,2)
+    print("Work1")
+    print(x.filteredSet)
+    print(len(x.nodes))
+    print("Work2")
+    x.applyFilter(4, 3)
+    print(x.filteredSet)
+    print(len(x.nodes))
+    print("Work3")
+    x.applyFilter(4, 8)
+    print(x.filteredSet)
+    print(len(x.nodes))
