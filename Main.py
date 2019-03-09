@@ -1,12 +1,12 @@
 import FileParser as fp
 import numpy as np
-dayToIndex = {'Monday': 1,
-            "Tuesday": 2,
-            "Wednesday": 3,
-            "Thursday": 4,
-            "Friday": 5,
-            "Saturday": 6,
-            "Sunday": 7}
+dayToIndex = {'Monday    ': 1,
+            'Tuesday   ': 2,
+            "Wednesday ": 3,
+            "Thursday  ": 4,
+            "Friday    ": 5,
+            "Saturday  ": 6,
+            "Sunday    ": 7}
 
 if __name__ == "__main__":
     robDset = fp.parseCSV(fp.crime_datasets[1])
@@ -18,11 +18,6 @@ if __name__ == "__main__":
     output = ["X","Y"]
     inputX = trainSet[input]
     outputY = trainSet[output]
-    inputX["occurrencedayofweek"].replace({'Monday': 1,
-            "Tuesday": 2,
-            "Wednesday": 3,
-            "Thursday": 4,
-            "Friday": 5,
-            "Saturday": 6,
-            "Sunday": 7})
-    print(inputX)
+    inputX["occurrencedayofweek"] = inputX["occurrencedayofweek"].replace(dayToIndex)
+    for i in inputX["occurrencedayofweek"]:
+        print(i)
