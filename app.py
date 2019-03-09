@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify, render_template
 from PopulateMap import PopulateMap
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+CORS(app)
 
 MapNodes = PopulateMap()
 
