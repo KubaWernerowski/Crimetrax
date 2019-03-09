@@ -1,44 +1,28 @@
 import FileParser as fp
-import tensorflow as tf
 import numpy as np
-dayToIndex = {"Monday": 1,
+dayToIndex = {'Monday': 1,
             "Tuesday": 2,
             "Wednesday": 3,
             "Thursday": 4,
             "Friday": 5,
             "Saturday": 6,
             "Sunday": 7}
-monthToIndex = {
-    "January":1,
-    "February":2,
-    "March":3,
-    "April":4,
-    "May":5,
-    "June":6,
-    "July":7,
-    "August":8,
-    "September":9,
-    "October":10,
-    "November":11,
-    "December":12
-}
+
 if __name__ == "__main__":
     robDset = fp.parseCSV(fp.crime_datasets[1])
-    featuresToDrop = ["Index_","event_unique_id",
-                      "occurrencedate",
-                      "reporteddate",
-                      "ucr_code",
-                      "ucr_ext",
-                      "offence",
-                      "reportedyear",
-                      "MCI",
-                      "reportedhour",
-                      "Division",
-                      "Hood_ID",
-                      "Neighbourhood",
-                      "FID"
-                      ]
-    features = ["LAT", "LONG", "occurencehour", "occurencemonth", "reportedday","reporteddayofweek","premisetype"]
-    robDset.drop(featuresToDrop,inplace=True,axis=1)
-    print(robDset.head())
-
+    features = ["LAT", "LONG", "occurencehour", "occurrencedayofyear","reporteddayofweek"]
+    msk = np.random.rand(len(robDset)) < .8
+    trainSet = robDset[msk]
+    testSet = robDset[~msk]
+    input = ["occurrencedayofweek","occurrencehour"]
+    output = ["X","Y"]
+    inputX = trainSet[input]
+    outputY = trainSet[output]
+    inputX["occurrencedayofweek"].replace({'Monday': 1,
+            "Tuesday": 2,
+            "Wednesday": 3,
+            "Thursday": 4,
+            "Friday": 5,
+            "Saturday": 6,
+            "Sunday": 7})
+    print(inputX)
