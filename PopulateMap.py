@@ -17,20 +17,19 @@ class PopulateMap():
     def __init__(self):
         self.set = fp.parseCSV(fp.crime_datasets[1])
         inp = ["occurrencedayofweek", "occurrencehour", "X", "Y"]
-        output = ["Lat", "Long"]
         inputX = self.set[inp]
-        inputX["occurrencedayofweek"] = inputX["occurrencedayofweek"].replace(
-            dayToIndex)
-
+        self.set = inputX["occurrencedayofweek"] = inputX["occurrencedayofweek"].replace(dayToIndex)
+        self.filteredSet = None
         self.applyFilter(4.0, 11.0)
-        self.nodes = []
-        for index, row in self.set.iterrows():
-            self.nodes.append(Node(float(row["X"]), float(row["Y"])))
-        self.getNeighbors(0.03)
+
 
     def applyFilter(self, day, time):
         first = self.set[self.set.occurrencedayofweek == day]
-        self.set = first[first.occurrencehour == time]
+        self.filteredSet = first[first.occurrencehour == time]
+        self.nodes = []
+        for index, row in self.filteredSet.iterrows():
+            self.nodes.append(Node(float(row["X"]), float(row["Y"])))
+        self.getNeighbors(0.03)
 
     def distanceTo(self, n1, n2):
         return math.sqrt((n1.lat-n2.lat)**2 + (n1.long - n2.long)**2)
