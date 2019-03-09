@@ -24,5 +24,21 @@ monthToIndex = {
 }
 if __name__ == "__main__":
     robDset = fp.parseCSV(fp.crime_datasets[1])
-    features = ["LAT", "LONG", "reportedhour", "occurencemonth", "reportedday","reporteddayofweek"]
+    featuresToDrop = ["Index_","event_unique_id",
+                      "occurrencedate",
+                      "reporteddate",
+                      "ucr_code",
+                      "ucr_ext",
+                      "offence",
+                      "reportedyear",
+                      "MCI",
+                      "reportedhour",
+                      "Division",
+                      "Hood_ID",
+                      "Neighbourhood",
+                      "FID"
+                      ]
+    features = ["LAT", "LONG", "occurencehour", "occurencemonth", "reportedday","reporteddayofweek","premisetype"]
+    robDset.drop(featuresToDrop,inplace=True,axis=1)
+    print(robDset.head())
 
