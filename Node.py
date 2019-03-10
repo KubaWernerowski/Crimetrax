@@ -4,3 +4,5 @@ class Node:
         self.lat = y
         self.neighbors = 0
 
+    def __str__(self):
+        return str(self.long) + "," + str(self.lat) + "," + str(self.neighbors)
