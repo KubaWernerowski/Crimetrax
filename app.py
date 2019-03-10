@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify, render_template
 from PopulateMap import PopulateMap
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+CORS(app)
 
 MapNodes = PopulateMap()
 
@@ -15,11 +17,18 @@ def main():
 def location():
     if request.method == 'POST':
         data = request.json
-    # using day and hour when fetching info from network
-        day = data['day']
-        hour = data['hour']
-    return jsonify({'latitude': day,
-                    'longitude': hour})
+        hour = data["hour"] - 1     # Add +1 before sending back
+        day = data["day"]
+
+        MapNodes.applyFilter(day, hour)
+
+        jsonNodes = []
+
+        for node in MapNodes.nodes:
+            jsonNode = jsonify({"lat": node.lat, "lng": node.long})
+            jsonNodes.append(jsonNode)
+
+        return jsonify({"nodes": MapNodes.nodes})
 
 
 if __name__ == '__main__':
